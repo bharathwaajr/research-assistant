@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { addPaper, getAllPapers } from './idb';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   const [noteTitle, setNoteTitle] = useState('');
   const [noteText, setNoteText] = useState('');
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useLocalStorage('research-notes', []);
   const [noteTags, setNoteTags] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
   const [filterTag, setFilterTag] = useState('');
@@ -42,6 +43,10 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes]);
+
+  useEffect(() => {
+    localStorage.setItem('research-notes', JSON.stringify(notes));
   }, [notes]);
 
   useEffect(() => {
