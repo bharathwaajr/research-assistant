@@ -5,13 +5,18 @@ import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+
   const [noteTitle, setNoteTitle] = useState('');
   const [noteText, setNoteText] = useState('');
   const [notes, setNotes] = useState([]);
+  const [noteTags, setNoteTags] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
+  const [filterTag, setFilterTag] = useState('');
+
   const [papers, setPapers] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedPaper, setSelectedPaper] = useState(null);
+
   const [reminderTitle, setReminderTitle] = useState('');
   const [reminderDate, setReminderDate] = useState('');
   const [reminders, setReminders] = useState(() => {
@@ -50,19 +55,23 @@ function App() {
   const handleSaveNote = () => {
     if (noteText.trim() === '' && noteTitle.trim() === '') return;
 
+    const tagsArray = noteTags.split(',').map(tag => tag.trim()).filter(tag =>tag);
+
     if (editingIndex !==null){
       //Update existing note
       const updatedNotes = [...notes];
-      updatedNotes[editingIndex] = {title :noteTitle, content:noteText};
+      updatedNotes[editingIndex] = {title :noteTitle, content:noteText, tags: tagsArray};
       setNotes(updatedNotes);
       setEditingIndex(null);
     }else{
       //Add new note
-      const newNote = {title:noteTitle, content:noteText};
+      const newNote = {title:noteTitle, content:noteText, tags: tagsArray};
       setNotes([...notes, newNote]);
     }
     setNoteTitle('');
     setNoteText('');
+    setNoteTags('');
+    setEditingIndex(null);
   };
 
   const handleEditNote = (index) =>{
@@ -192,6 +201,12 @@ function App() {
               onChange={(e) => setNoteText(e.target.value)}
               rows="4" 
             />
+            <input
+              type="text"
+              placeholder="Tags (comma Seperated)"
+              value={noteTags}
+              onChange={(e) => setNoteTags(e.target,value)}
+            />
             <div className="button-group">
               <button onClick={handleSaveNote}>
                 {editingIndex !== null ? 'Update Note' : 'Save Note'}
@@ -202,11 +217,29 @@ function App() {
             </div>
             
             <h3>Saved Notes</h3>
+            <input
+              type="text"
+              placeholder="Filter by tag"
+              value={filterTag}
+              onChange={(e) => setFilterTag(e.target.value)}
+            />
             <ul className="notes-list">
-              {notes.map((note, index) => (
+              {notes
+                .filter(note =>
+                  !filterTag || (note.tags && note.tags.some(tag => tag.toLowerCase().includes(filterTag.toLowerCase())
+                ))
+              )
+              .map((note, index) => (
                 <li key={index}>
                   <h4>{note.title}</h4>
                   <p>{note.content}</p>
+                  {note.tags && note.tags.length > 0 && (
+                    <div className ="tags">
+                      {note.tags.map((tag, i) =>(
+                        <span key={i} className="tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
                   <div className="note-actions">
                     <button onClick={() => handleEditNote(index)}>Edit</button>
                     <button onClick={() => handelDeleteNote(index)}>Delete</button>
