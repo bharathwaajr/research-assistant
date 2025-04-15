@@ -13,6 +13,9 @@ function App() {
   const [noteTags, setNoteTags] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
   const [filterTag, setFilterTag] = useState('');
+  const [tagInput, setTagInput] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  
 
   const [papers, setPapers] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -56,6 +59,17 @@ function App() {
     };
     loadPapers();
   }, []);
+
+  useEffect(() => {
+    if (tagInput.length > 0){
+      const matchingTags = getAllUniqueTags().filter(tag => 
+        tag.toLowerCase().imcludes(tagInput.toLowerCase())
+      );
+      setSuggestions(matchingTags);
+    } else{
+      setSuggestions([]);
+    }
+  }, [tagInput, notes]);
 
   const handleSaveNote = () => {
     if (noteText.trim() === '' && noteTitle.trim() === '') return;
@@ -143,6 +157,11 @@ function App() {
     localStorage.setItem('reminders', JSON.stringify(updatedReminders));
   };
 
+  const getAllUniqueTags = () => {
+    const allTags = notes.flatMap(note => note.tags || []);
+    return[...new Set(allTags)];
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-100 text-gray-800">
       {/* Sidebar */}
@@ -206,12 +225,41 @@ function App() {
               onChange={(e) => setNoteText(e.target.value)}
               rows="4" 
             />
-            <input
-              type="text"
-              placeholder="Tags (comma Seperated)"
-              value={noteTags}
-              onChange={(e) => setNoteTags(e.target,value)}
-            />
+            <div className="tags-input-container">
+              <input
+                type="text"
+                placeholder="Add tags (comma seperated)"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === ',' || e.key === 'Enter'){
+                    e.preventDefault();
+                    setNoteTags(prev =>
+                      prev ? '${prev}, ${tagInput}' : tagInput
+                    );
+                    setTagInput('');
+                  }
+                }}
+              />
+              {/* Tag suggestions dropdown*/}
+              {suggestions.length > 0 && (
+                <ul className="suggestions-List">
+                  {suggestions.map(tag => (
+                    <li 
+                      key={tag}
+                      onClick={() => {
+                        setNoteTags(prev => 
+                          prev ? '${prev}, ${tag}' : tag
+                        );
+                        setTagInput('');
+                      }}
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className="button-group">
               <button onClick={handleSaveNote}>
                 {editingIndex !== null ? 'Update Note' : 'Save Note'}
