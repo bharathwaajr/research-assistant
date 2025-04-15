@@ -8,6 +8,7 @@ function App() {
   const [noteTitle, setNoteTitle] = useState('');
   const [noteText, setNoteText] = useState('');
   const [notes, setNotes] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [papers, setPapers] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedPaper, setSelectedPaper] = useState(null);
@@ -48,10 +49,32 @@ function App() {
 
   const handleSaveNote = () => {
     if (noteText.trim() === '' && noteTitle.trim() === '') return;
-    const newNote = { title: noteTitle, content: noteText };
-    setNotes([...notes, newNote]);
+
+    if (editingIndex !==null){
+      //Update existing note
+      const updatedNotes = [...notes];
+      updatedNotes[editingIndex] = {title :noteTitle, content:noteText};
+      setNotes(updatedNotes);
+      setEditingIndex(null);
+    }else{
+      //Add new note
+      const newNote = {title:noteTitle, content:noteText};
+      setNotes([...notes, newNote]);
+    }
     setNoteTitle('');
     setNoteText('');
+  };
+
+  const handleEditNote = (index) =>{
+    setNoteTitle(notes[index].title);
+    setNoteText(notes[index].content);
+    setEditingIndex(nullindex);
+  };
+
+  const handleCancelEdit =() =>{
+    setNoteTitle('');
+    setNoteText('');
+    setEditingIndex(null);
   };
 
   const filteredNotes = notes.filter(
@@ -155,21 +178,39 @@ function App() {
 
         {/* NOTES */}
         {currentPage === 'notes' && (
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Add a New Note</h2>
-            <input type="text" placeholder="Note Title" value={noteTitle} onChange={(e) => setNoteTitle(e.target.value)}
-              className="w-full mb-2 px-4 py-2 border rounded" />
-            <textarea placeholder="Write your note..." value={noteText} onChange={(e) => setNoteText(e.target.value)}
-              rows="4" className="w-full mb-4 px-4 py-2 border rounded"></textarea>
-            <button onClick={handleSaveNote} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 w-full">Save Note</button>
-
-            <h3 className="text-xl font-semibold mb-2">Saved Notes</h3>
-            <ul className="space-y-4">
-              {filteredNotes.map((note, index) => (
-                <li key={index} className="bg-white p-4 rounded shadow">
-                  <h4 className="font-bold">{note.title}</h4>
+          <div className="app">
+            <h2>{editingIndex !== null ? 'Edit Note' : 'Add New Note'}</h2>
+            <input 
+              type="text" 
+              placeholder="Note Title" 
+              value={noteTitle} 
+              onChange={(e) => setNoteTitle(e.target.value)}
+            />
+            <textarea 
+              placeholder="Write your note..." 
+              value={noteText} 
+              onChange={(e) => setNoteText(e.target.value)}
+              rows="4" 
+            />
+            <div className="button-group">
+              <button onClick={handleSaveNote}>
+                {editingIndex !== null ? 'Update Note' : 'Save Note'}
+              </button>
+              {editingIndex !== null && (
+                <button onClick={handleCancelEdit}>Cancel</button>
+              )}
+            </div>
+            
+            <h3>Saved Notes</h3>
+            <ul className="notes-list">
+              {notes.map((note, index) => (
+                <li key={index}>
+                  <h4>{note.title}</h4>
                   <p>{note.content}</p>
-                  <button onClick={() => handelDeleteNote(index)} className="mt-2 text-red-500">Delete</button>
+                  <div className="note-actions">
+                    <button onClick={() => handleEditNote(index)}>Edit</button>
+                    <button onClick={() => handelDeleteNote(index)}>Delete</button>
+                  </div>
                 </li>
               ))}
             </ul>
