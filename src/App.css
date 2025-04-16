@@ -8,7 +8,7 @@
 .app {
   max-width: 800px;
   margin: 0 auto;
-  padding: :20px;
+  padding: 20px;
 }
 
 .button-group {
@@ -90,4 +90,56 @@
   border: none;
   cursor: pointer;
   color: #666;
+}
+.btn-primary {
+  @apply text-white px-4 py-2 rounded hover:opacity-90 transition;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition;
+}
+
+.btn-edit {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.btn-delete {
+  @apply text-red-600 hover:text-red-800;
+}
+
+.note-card {
+  @apply bg-white p-4 rounded shadow mb-4;
+}
+
+.tag {
+  @apply bg-gray-200 px-2 py-1 rounded text-sm inline-flex items-center mr-2 mb-2;
+}
+
+.error-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
