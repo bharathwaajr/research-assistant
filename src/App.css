@@ -5,38 +5,141 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.button-group {
+  margin: 10px 0;
+  display: flex;
+  gap: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.notes-list {
+  list-style: none;
+  padding: 0;
 }
 
-.card {
-  padding: 2em;
+.notes-list li {
+  background: #f5f5f5f5;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.read-the-docs {
-  color: #888;
+.note-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.note-actions button {
+  padding: 5px 10px;
+}
+
+.tags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tags-input-container {
+  position: relative;
+  margin: 10px 0;
+}
+
+.suggestions-list {
+  position: absolute;
+  z-index: 10;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+}
+
+.suggestions-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover{
+  background-color: #f0f0f0;
+}
+
+.current-tags span {
+  background: #e0e0e0;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+}
+
+.current-tags button {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+.btn-primary {
+  @apply text-white px-4 py-2 rounded hover:opacity-90 transition;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition;
+}
+
+.btn-edit {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.btn-delete {
+  @apply text-red-600 hover:text-red-800;
+}
+
+.note-card {
+  @apply bg-white p-4 rounded shadow mb-4;
+}
+
+.tag {
+  @apply bg-gray-200 px-2 py-1 rounded text-sm inline-flex items-center mr-2 mb-2;
+}
+
+.error-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
